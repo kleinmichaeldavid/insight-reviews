@@ -46,7 +46,7 @@
       <!-- The justified navigation menu is meant for single line per list item.
            Multiple lines will require custom code not provided by Bootstrap. -->
       <div class="masthead">
-        <h3 class="text-muted">Project name</h3>
+        <h3 class="text-muted">BrandGuard - Know the companies you keep.</h3>
         <nav>
           <ul class="nav nav-justified">
             <li class="active"><a href="#">Home</a></li>
@@ -61,7 +61,7 @@
 
       <!-- Jumbotron -->
       <div class="jumbotron">
-        <h1>Example of some stuff</h1>
+        <h2>Enter your review here:</h2>
         <form method="POST">
           <input class=textboxarea type="text" name="review_input" value="Enter your review here."><br><br>
           <input id="submit_button" class="btn btn-lg btn-success" type="submit" value="Analyze Review" />
@@ -114,7 +114,7 @@
           let x_scale = d3.scaleLinear()
             .range([0,plot_width])
             .domain([-1,1])
-            
+
           scaled_heights = bar_heights.map(function(d){return y_scale(d)})
 
           let xAxis = d3.axisBottom(x_scale).tickValues(bins)
@@ -136,17 +136,14 @@
           .append("rect")
           .attr("fill","#4681a8")
           .attr("y", function(d) {
-            console.log(plot_height - y_scale(d))
             return plot_height - y_scale(d);
           })
           .attr("height", function(d) {
-            console.log(y_scale(d))
             return y_scale(d);
           })
           .attr("width", barWidth - barPadding)
           .attr("transform", function (d, i) {
             var translate = [plot_width * i / barCount, 0];
-            console.log(translate)
             return "translate("+ translate +")";
           });
 
@@ -162,7 +159,11 @@
           .attr("stroke", "red")
           .attr("stroke-width", "3px")
 
+          console.log('line_pos: ' + line_pos)
+
         };
+
+        
 
       </script>
         
@@ -184,7 +185,7 @@
               .then( function (data) {
 
                 plot(data, 'unique', '#unique_body', "#unique_xAxis",
-                  bodyWidth, bodyHeight, {{ slider_num }})
+                  bodyWidth, bodyHeight, {{ predict_uniq }})
               });
 
 
@@ -211,7 +212,7 @@
               .then( function (data) {
 
                 plot(data, 'human', '#human_body', "#human_xAxis",
-                  bodyWidth, bodyHeight, {{ slider_num }})
+                  bodyWidth, bodyHeight, {{ predict_humt }})
               });
 
 
@@ -238,7 +239,7 @@
               .then( function (data) {
 
                 plot(data, 'quality', '#quality_body', "#quality_xAxis",
-                  bodyWidth, bodyHeight, {{ slider_num }})
+                  bodyWidth, bodyHeight, {{ predict_qual }})
               });
 
             </script>
