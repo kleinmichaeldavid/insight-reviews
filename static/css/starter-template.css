@@ -1,0 +1,19 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+.textboxarea {
+	width: 80%;
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 0%;
+}
+
+
+.bar-chart {
+	background-color: #C7D9D9;
+}
