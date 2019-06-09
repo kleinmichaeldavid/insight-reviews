@@ -86,11 +86,12 @@
       <script>
 
 
-        function plot(data, topic, container_name, axis_object, plot_width, plot_height) {
+        function plot(data, topic, container_name, axis_object, 
+          plot_width, plot_height, line_pos) {
 
           var plot_container = d3.select(container_name)
-          .attr("width", bodyWidth)
-          .attr("height", bodyHeight)
+          .attr("width", plot_width)
+          .attr("height", plot_height)
           .style("transform","translate(50px,10px)")
 
           bar_heights = data.map(function(d) {
@@ -113,10 +114,8 @@
           let x_scale = d3.scaleLinear()
             .range([0,plot_width])
             .domain([-1,1])
-
-          console.log('within function before scale: ' + bar_heights)
+            
           scaled_heights = bar_heights.map(function(d){return y_scale(d)})
-          console.log(scaled_heights)
 
           let xAxis = d3.axisBottom(x_scale).tickValues(bins)
           .tickFormat(function(d,i){ return xticks[i]})
@@ -151,6 +150,18 @@
             return "translate("+ translate +")";
           });
 
+          let line = d3.select(container_name)
+          .append("g")
+          //.attr("transform","translate(100,0)")
+
+          line.append("line")
+          .attr("x1", x_scale(line_pos) )
+          .attr("x2", x_scale(line_pos) )
+          .attr("y1", 0)
+          .attr("y2", bodyHeight)
+          .attr("stroke", "red")
+          .attr("stroke-width", "3px")
+
         };
 
       </script>
@@ -172,8 +183,11 @@
               var data_set = d3.csv("/static/js/data_for_histograms.csv")
               .then( function (data) {
 
-                plot(data, 'unique', '#unique_body', "#unique_xAxis", bodyWidth, bodyHeight)
+                plot(data, 'unique', '#unique_body', "#unique_xAxis",
+                  bodyWidth, bodyHeight, {{ slider_num }})
               });
+
+
 
             </script>
             <input type="range" min="1" max="100" value="50" class="slider" id="uniqueRange">
@@ -196,10 +210,10 @@
               var data_set = d3.csv("/static/js/data_for_histograms.csv")
               .then( function (data) {
 
-                plot(data, 'human', '#human_body', "#human_xAxis", bodyWidth, bodyHeight)
+                plot(data, 'human', '#human_body', "#human_xAxis",
+                  bodyWidth, bodyHeight, {{ slider_num }})
               });
 
-              console.log(d3.select("#human_body"))
 
             </script>
             <input type="range" min="1" max="100" value="50" class="slider" id="humanRange">
@@ -223,7 +237,8 @@
               var data_set = d3.csv("/static/js/data_for_histograms.csv")
               .then( function (data) {
 
-                plot(data, 'quality', '#quality_body', "#quality_xAxis", bodyWidth, bodyHeight)
+                plot(data, 'quality', '#quality_body', "#quality_xAxis",
+                  bodyWidth, bodyHeight, {{ slider_num }})
               });
 
             </script>
