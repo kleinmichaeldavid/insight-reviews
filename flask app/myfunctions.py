@@ -2,28 +2,28 @@
 from contractions import CONTRACTION_MAP
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction import stop_words as sw_sklearn
-from nltk.corpus import stopwords as sw_nltk
-from gensim.parsing.preprocessing import STOPWORDS as sw_gensim
+#from nltk.corpus import stopwords as sw_nltk
+#from gensim.parsing.preprocessing import STOPWORDS as sw_gensim
 import pandas as pd
 import numpy as np
 import io
 import re
 import unicodedata
 import nltk
-nltk.download('stopwords')
+#nltk.download('stopwords')
 nltk.download('wordnet')
 
-def create_stopwords(my_stopwords):
-    stopwords_sklearn = list(sw_sklearn.ENGLISH_STOP_WORDS)
-    stopwords_nltk = list(sw_nltk.words('english'))
-    stopwords_gensim = list(sw_gensim)
+# def create_stopwords(my_stopwords):
+#     stopwords_sklearn = list(sw_sklearn.ENGLISH_STOP_WORDS)
+#     stopwords_nltk = list(sw_nltk.words('english'))
+#     stopwords_gensim = list(sw_gensim)
 
-    custom_stopwords = set(stopwords_sklearn +
-                           stopwords_nltk +
-                           stopwords_gensim +
-                           my_stopwords)
+#     custom_stopwords = set(stopwords_sklearn +
+#                            stopwords_nltk +
+#                            stopwords_gensim +
+#                            my_stopwords)
     
-    return custom_stopwords
+#     return custom_stopwords
 
 def sentence_splitter(reviews, split_on):
     sentences = [re.split(split_on,rev) for rev in reviews]
@@ -74,23 +74,23 @@ def lemmatize_text(text):
 def remove_stopwords(sentence, stopwords):
     return ' '.join([word for word in sentence.split(' ') if word not in stopwords])
 
-def get_w2v_features(w2v_model, sentence):
+# def get_w2v_features(w2v_model, sentence):
     
-    index2word_set = set(w2v_model.wv.vocab.keys()) # create vocab set
-    embedding = np.zeros(w2v_model.vector_size, dtype="float32") # init vector
+#     index2word_set = set(w2v_model.wv.vocab.keys()) # create vocab set
+#     embedding = np.zeros(w2v_model.vector_size, dtype="float32") # init vector
     
-    ## there shouldn't be empty sentences, but include this just in case
-    if len(sentence) > 0:
-        nwords = 0 # word counter
-        for word in sentence:
-            if word in index2word_set:
-                # if the word is in the set, add it and increment counter
-                embedding = np.add(embedding, w2v_model[word])
-                nwords += 1.
-        if nwords > 0: # in case no words were aded
-            embedding = np.divide(embedding, nwords)
+#     ## there shouldn't be empty sentences, but include this just in case
+#     if len(sentence) > 0:
+#         nwords = 0 # word counter
+#         for word in sentence:
+#             if word in index2word_set:
+#                 # if the word is in the set, add it and increment counter
+#                 embedding = np.add(embedding, w2v_model[word])
+#                 nwords += 1.
+#         if nwords > 0: # in case no words were aded
+#             embedding = np.divide(embedding, nwords)
         
-    return embedding
+#     return embedding
 
 def preprocessing(review_df,
                   split_sentences = False,
@@ -109,62 +109,62 @@ def preprocessing(review_df,
     
     ## other options...
     # replace rare words with a certain token
-    
+
     ## split into sentences (optional)
     if split_sentences:
         print('splitting into sentences...')
         review_df = pd.DataFrame({old_col : sentence_splitter(review_df[old_col],split_on)})
-    
+
     ## remove accents
     print('removing accents...')
     review_df[new_col] = list(map(remove_accented_chars, review_df[old_col]))
-    
+
     ## convert all text to lowercase
     print('converting to lowercase...')
     review_df[new_col] = review_df[new_col].str.lower()
-    
+
     ## expand contractions
     print('expanding contractions...')
     review_df[new_col] = list(map(expand_contractions,review_df[new_col]))
-    
+
     ## replace numbers (optional)
     if replace_numbers:
         print('replacing numbers...')
         review_df[new_col] = list(map(number_replacer,review_df[new_col]))
-    
+
     ## clear non-alphanumerics
     print('alphanumerizing...')
     review_df[new_col] = [alphanumerize(rev, remove_pattern) for rev in review_df[new_col]]
-    
+
     ## lemmatize (optional)
     if lemmatize:
         print('lemmatizing...')
         review_df[new_col] = list(map(lemmatize_text,review_df[new_col]))
-        
+
     ## remove stop words (optional)
-    if remove_stops:
-        print('removing stop words...')
-        if stopwords == '':
-            stopwords = nltk.corpus.stopwords.words('english')
-            stopwords.remove('not')
-        if lemmatize:
-            stopwords = [lemmatizer.lemmatize(w) for w in stopwords]
-        review_df[new_col] = [remove_stopwords(rev, stopwords) for rev in review_df[new_col]]
+    # if remove_stops:
+    #     print('removing stop words...')
+    #     if stopwords == '':
+    #         stopwords = nltk.corpus.stopwords.words('english')
+    #         stopwords.remove('not')
+    #     if lemmatize:
+    #         stopwords = [lemmatizer.lemmatize(w) for w in stopwords]
+    #     review_df[new_col] = [remove_stopwords(rev, stopwords) for rev in review_df[new_col]]
 
     ## tokenize (optional)
     if tokenize:
         print('tokenizing...')
         review_df[new_col] = list(map(tokenize_text,review_df[new_col]))
     
-    ## embed (optional)
-    if embed:
-        print('embedding words...')
-        review_df['embeddings'] = list(map(lambda sentence:get_w2v_features(W2Vmodel, sentence),
-                                    review_df[new_col]))
+    # ## embed (optional)
+    # if embed:
+    #     print('embedding words...')
+    #     review_df['embeddings'] = list(map(lambda sentence:get_w2v_features(W2Vmodel, sentence),
+    #                                 review_df[new_col]))
         
-        if output_embeddings:
-            print('converting to embedded form...')
-            review_df = review_df['embeddings'].apply(pd.Series)
+    #     if output_embeddings:
+    #         print('converting to embedded form...')
+    #         review_df = review_df['embeddings'].apply(pd.Series)
     
     return review_df
 
