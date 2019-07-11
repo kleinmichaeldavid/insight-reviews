@@ -2,7 +2,7 @@
 ### Know The Companies You Keep
 ---
 
-This is the repository for my project for Insight Data Science, which was completed from start (defining a problem) to finish (deploying a web app) over the span of a few weeks during my time as a Data Science Fellow at Insight. The web app can be accessed at [mikeklein.ca](mikeklein.ca). Presentation slides can be found [here](https://github.com/kleinmichaeldavid/insight-reviews/blob/master/Michael_Klein_Demo.pdf). 
+This is the repository for my project for Insight Data Science, which was completed from start (defining a problem) to finish (deploying a web app) over the span of a few weeks during my time as a Data Science Fellow at Insight. The web app can be accessed at [mikeklein.ca](http://mikeklein.ca). Presentation slides can be found [here](https://github.com/kleinmichaeldavid/insight-reviews/blob/master/Michael_Klein_Demo.pdf). 
 
 ### Background and Problem
 
